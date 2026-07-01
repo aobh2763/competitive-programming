@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/hp/Documents/Programming/C++/Competitive Programming/Test/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=gnu++17 -o CMakeFiles\\Test.dir\\src\\main.cpp.obj -c \"C:\\Users\\hp\\Documents\\Programming\\C++\\Competitive Programming\\Test\\src\\main.cpp\"",
+  "file": "C:/Users/hp/Documents/Programming/C++/Competitive Programming/Test/src/main.cpp",
+  "output": "C:/Users/hp/Documents/Programming/C++/Competitive Programming/Test/build/CMakeFiles/Test.dir/src/main.cpp.obj"
+}
+]
