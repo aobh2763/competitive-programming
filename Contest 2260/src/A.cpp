@@ -46,4 +46,6 @@ int main()
 			cout << firstProblem + lastProblem << endl;
 		}
 	}
+
+	return 0;
 }
