@@ -2,53 +2,47 @@
 
 using namespace std;
 
-long calculateMedian(vector<long> v)
+long sumMatrix(vector<vector<int>> &prefix, int fromX, int fromY, int toX, int toY)
 {
-	if (v.empty())
+	return prefix[toX + 1][toY + 1] - prefix[fromX][toY + 1] - prefix[toX + 1][fromY] + prefix[fromX][fromY];
+}
+
+bool possible(vector<vector<int>> &prefix, int startX, int startY, int size)
+{
+	if (size == 0)
 	{
-		return 0l;
+		return true;
 	}
 
-	long n = v.size();
+	long sum = sumMatrix(prefix, startX, startY, startX + size - 1, startY + size - 1);
 
-	if (n % 2 != 0)
+	if (size % 2 == 0)
 	{
-		auto mid = v.begin() + n / 2;
-		nth_element(v.begin(), mid, v.end());
-		return (long)(*mid);
+		return (sum >= ((size * size) / 2));
 	}
 	else
 	{
-		auto mid2 = v.begin() + n / 2;
-		auto mid1 = mid2 - 1;
-
-		nth_element(v.begin(), mid2, v.end());
-		long val2 = *mid2;
-
-		nth_element(v.begin(), mid1, mid2);
-		long val1 = *mid1;
-
-		return min(val1, val2);
+		return (sum >= (((size * size) / 2) + 1));
 	}
 }
 
-vector<long> flatten(vector<vector<long>> matrix)
+bool possibleSize(vector<vector<int>> &prefix, int n, int m, int size)
 {
-	vector<long> flattened;
+	int itersX = n - size + 1;
+	int itersY = m - size + 1;
 
-	long total_size = 0;
-	for (const auto &row : matrix)
+	for (int i = 0; i < itersX; i++)
 	{
-		total_size += row.size();
+		for (int j = 0; j < itersY; j++)
+		{
+			if (possible(prefix, i, j, size))
+			{
+				return true;
+			}
+		}
 	}
-	flattened.reserve(total_size);
 
-	for (const auto &row : matrix)
-	{
-		flattened.insert(flattened.end(), row.begin(), row.end());
-	}
-
-	return flattened;
+	return false;
 }
 
 int main()
@@ -58,15 +52,54 @@ int main()
 
 	cin >> n >> m >> k;
 
-	vector<vector<long>> M = vector<vector<long>>(n, vector<long>(m));
+	vector<vector<int>> v = vector<vector<int>>(n, vector<int>(m));
 
+	long tmp;
 	for (int i = 0; i < n; i++)
 	{
 		for (int j = 0; j < m; j++)
 		{
-			cin >> M[i][j];
+			cin >> tmp;
+
+			if (tmp <= k)
+			{
+				v[i][j] = 1;
+			}
+			else
+			{
+				v[i][j] = 0;
+			}
 		}
 	}
+
+	vector<vector<int>> prefix(n + 1, vector<int>(m + 1, 0));
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++)
+		{
+			prefix[i][j] = v[i - 1][j - 1] + prefix[i - 1][j] + prefix[i][j - 1] - prefix[i - 1][j - 1];
+		}
+	}
+
+	int minSize = 0;
+	int maxSize = min(n, m);
+
+	while (minSize <= maxSize)
+	{
+		int middleSize = (minSize + maxSize) / 2;
+
+		if (possibleSize(prefix, n, m, middleSize))
+		{
+			minSize = middleSize + 1;
+		}
+		else
+		{
+			maxSize = middleSize - 1;
+		}
+	}
+
+	cout << maxSize * maxSize << endl;
 
 	return 0;
 }
